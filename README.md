@@ -28,3 +28,197 @@ spring.datasource.driver-class-name=org.postgresql.Driver
 spring.datasource.username=user
 spring.datasource.password=password
 </code></pre>
+
+
+
+7. Create test "StudentRepositoryTest" for Student Repository and add this method to it.
+
+    ```@Test
+    void itShouldCheckIfStudentExistsEmail() {
+        
+    }
+8. Add StudentRepository undertest to the beggining of the test class
+   ```@Autowired
+    private StudentRepository undertest
+9. Add 
+    ```@Test
+    void itShouldCheckIfStudentEmailExists() {
+        //given
+        String email = "jamila@gmail.com";
+        Student student = new Student(
+            "Jamila",
+            email,
+            Gender.FEMALE
+        );
+        //when
+        underTest.save(student);
+
+        //then
+        boolean expected = underTest.selectExistsEmail(email);
+        
+        assertThat(expected).isTrue();
+    }
+10. Add this dependency to pom and Reload Maven
+    ```
+    <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <scope>test</scope>
+    </dependency>
+
+11. Copy application.properties from src/**main**/resources/ to src/**test**/resources/ (Create the resources directory if it doesn't exist)
+12. Copy this into the file src/test/resources/application.properties
+```
+spring.datasource.url=jdbc:h2://mem:db;DB_CLOSE_DELAY=-1
+spring.datasource.username=sa
+spring.datasource.password=sa
+spring.datasource.driver-class-name=org.h2.Driver
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.properties.hibernate.format_sql=true
+```
+13. Run the test again. Watch it fail
+14. Add @DataJpaTest to the header above ```class StudentRepositoryTest```    
+15. Run again. Check that it works.
+16. Create this test. And run it afterwards
+   ```@Test
+    void itShouldCheckIfStudentEmailDoesNotExist() {
+        //given
+        String email = "jamila@gmail.com";
+        
+
+        //when
+        boolean expected = underTest.selectExistsEmail(email);
+        
+        //then
+        assertThat(expected).isFalse();
+    }
+```
+17. Create this tearDown
+    ```@AfterEach
+        void tearDown() {
+            underTest.deleteAll();
+        }
+
+18. Say that we are only testing these methods, because these are methods that were created. There are loads of methods that were provided by Spring and already tested. We only have to test the methods in our interface.
+
+19. First test Service the wrong way. Create test "StudentServiceTest" for Student Service
+
+20. Generate relevant testing methods. You can do this automatically by going to IntelliJ, right click anywhere on StudentService and clicking Generate tests.
+
+
+21. Add ```private StudentService undertest;```
+
+22. Add ```@Mock private StudentRepository studentRepository;```
+
+     
+24. Add BeforeEach in the beggining of the class
+
+    ```
+    @Test
+    void setUp() {
+        underTest = new StudentService()
+    }
+    ```
+
+25. Add ExtendWith(MockitoExtension.class)
+    ```
+    ExtendWith(MockitoExtension.class)
+    class(StudentServiceTest) {
+    ```
+
+26. Add/modify method canGetAllStudents for the real test
+
+    ```
+    @Test
+    void canGetAllStudents() {
+        //when
+        underTest.getAllStudents();
+        //then
+        verify(studentRepository).findAll();
+    }
+    ```
+
+27. Add method canAddStudent
+
+    ```
+    @Test
+    void canAddStudent() {
+
+    }
+    ```
+
+27. Add method canAddStudent
+
+    ```
+    @Test
+    void canAddStudent() {
+        //given
+        Student student = new Student(
+            "Jamila",
+            "jamila@gmail.com",
+            Gender.FEMALE
+        );
+        //when
+        undertest.addStudent(student)
+        //then
+        ArgumentCaptor<Student> studentArgumentCaptor =
+         ArgumentCaptor.forClass(Student.class);
+        
+        verify(studentRepository).save(studentArgumentCaptor.capture());
+    }
+    ```
+
+28. Add method canAddStudent
+
+    ```
+    @Test
+    void canAddStudent() {
+        //given
+        Student student = new Student(
+            "Jamila",
+            "jamila@gmail.com",
+            Gender.FEMALE
+        );
+        //when
+        undertest.addStudent(student)
+        //then
+        ArgumentCaptor<Student> studentArgumentCaptor =
+         ArgumentCaptor.forClass(Student.class);
+        
+        verify(studentRepository).save(studentArgumentCaptor.capture());
+        Student capturedStudent = studentArgumentCaptor.getValue();
+
+        assertThat(capturedStudent).isEqualTo(student);
+    }
+    ```
+
+29. Show code coverage. Go to run and select "Generate Test Coverage". Go to StudentService and check the left side for green and red blocks.
+
+
+
+30. Go fix that Red block of coverage by testing it.
+
+```
+    @Test
+    void willThrowEmailIfTaken() {
+        //given
+        Student student = new Student(
+            "Jamila",
+            "jamila@gmail.com",
+            Gender.FEMALE
+        );
+
+        given(studentRepository.selectExistsEmail(student.getEmail()))
+        .willReturn(true);
+        //when
+        //then
+
+        assertThatThrownBy(() -> undertest.addStudent(student))
+        .isInstanceOf(BadRequestException.class)
+        .hasMessageContaining("Student with id " + studentId + " does not exists");
+
+        verify(studentRepository, never()).save(any());
+        
+    }
