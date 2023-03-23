@@ -18,6 +18,11 @@ public class StudentController {
         return studentService.getAllStudents();
     }
 
+    @GetMapping(path = "/getByEmail")
+    public Student getStudentByEmail (@RequestParam String email) {
+        return studentService.getStudentByEmail(email);
+    }
+
     @PostMapping
     public void addStudent(@Valid @RequestBody Student student) {
         studentService.addStudent(student);
