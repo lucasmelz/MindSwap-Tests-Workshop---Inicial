@@ -1,4 +1,6 @@
+# MindSwap Software Testing Workshop
 
+## Tutorial
 1. Pull Postgres Docker Image:<br>
 `docker pull postgres`
 
