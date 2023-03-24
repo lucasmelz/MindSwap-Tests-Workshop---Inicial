@@ -238,4 +238,4 @@ Then reload the project with Maven for it to recognize Apache Commons Validator.
 `EmailValidator emailValidator = EmailValidator.getInstance();`<br>
 Now you can use the method *isValid(String email)* provided by this object to validate emails. Make sure you throw a *BadRequestException* if the email is not valid, just like it does when the email already is taken. After you do that, you can use Intellij Idea test coverage tool to note that this code we just wrote is not being covered by our tests. So let's fix that.
 
-Let's create the corresponding test. Go to the class and create a method *willThrowWhenEmailIsInvalid()* and implement the test in a similar fashion as the method *willThrowWhenEmailIsTaken*.
+Let's create the corresponding test. Go to the class and create a method *willThrowWhenEmailIsInvalid()* and implement the test in a similar fashion as the method *willThrowWhenEmailIsTaken()*.
