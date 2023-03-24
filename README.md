@@ -31,11 +31,10 @@ spring.datasource.username=user
 spring.datasource.password=password
 </code></pre>
 
-
-
 7. Create test "StudentRepositoryTest" for Student Repository and add this method to it. You can create the test class by going to the StudentRepository class and pressing COMMAND + SHIFT + T and selecting the appropriate options.
 
-    ```@Test
+    ```
+    @Test
     void itShouldCheckIfStudentExistsEmail() {
         
     }
@@ -43,7 +42,8 @@ spring.datasource.password=password
    ```@Autowired
     private StudentRepository underTest
 9. Add 
-    ```@Test
+    ```
+    @Test
     void itShouldCheckIfStudentEmailExists() {
         //given
         String email = "jamila@gmail.com";
@@ -68,7 +68,7 @@ spring.datasource.password=password
         <scope>test</scope>
     </dependency>
 
-11. Copy application.properties from src/**main**/resources/ to src/**test**/resources/ (Create the resources directory if it doesn't exist)
+11. Copy application.properties from src/**main**/resources/ to src/**test**/resources/ (Create the resources directory if it doesn't exist).
 12. Copy this into the file src/test/resources/application.properties
 ```
 spring.datasource.url=jdbc:h2://mem:db;DB_CLOSE_DELAY=-1
@@ -84,12 +84,12 @@ spring.jpa.properties.hibernate.format_sql=true
 14. Add @DataJpaTest to the header above ```class StudentRepositoryTest```    
 15. Run again. Check that it works.
 16. Create this test. And run it afterwards
-   ```@Test
+   ```
+    @Test
     void itShouldCheckIfStudentEmailDoesNotExist() {
         //given
         String email = "jamila@gmail.com";
         
-
         //when
         boolean expected = underTest.selectExistsEmail(email);
         
@@ -98,7 +98,8 @@ spring.jpa.properties.hibernate.format_sql=true
     }
 ```
 17. Create this tearDown
-    ```@AfterEach
+    ```
+        @AfterEach
         void tearDown() {
             underTest.deleteAll();
         }
