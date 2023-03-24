@@ -127,7 +127,7 @@ spring.jpa.properties.hibernate.format_sql=true
 25. Add @ExtendWith(MockitoExtension.class) annotation to the StudentServiceTest. This annotation basically opens up our mock repository before each test and closes it after each test.
     ```
     @ExtendWith(MockitoExtension.class)
-    class(StudentServiceTest) {
+    class StudentServiceTest {
     ```
 
 26. Add/modify method canGetAllStudents for the real test
