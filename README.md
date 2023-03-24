@@ -33,7 +33,7 @@ spring.datasource.password=password
 
 
 
-7. Create test "StudentRepositoryTest" for Student Repository and add this method to it.
+7. Create test "StudentRepositoryTest" for Student Repository and add this method to it. You can create the test class by going to the StudentRepository class and pressing COMMAND + SHIFT + T and selecting the appropriate options.
 
     ```@Test
     void itShouldCheckIfStudentExistsEmail() {
@@ -41,7 +41,7 @@ spring.datasource.password=password
     }
 8. Add StudentRepository undertest to the beggining of the test class
    ```@Autowired
-    private StudentRepository undertest
+    private StudentRepository underTest
 9. Add 
     ```@Test
     void itShouldCheckIfStudentEmailExists() {
