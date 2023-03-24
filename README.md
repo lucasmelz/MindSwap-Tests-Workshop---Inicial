@@ -110,12 +110,12 @@ spring.jpa.properties.hibernate.format_sql=true
 
 20. Generate relevant testing methods. You can do this automatically by going to IntelliJ, right click anywhere on StudentService and clicking Generate tests (or using SHIFT + COMMAND + T).
 
-21. Add ```private StudentService undertest;```
+21. Add ```private StudentService undertest;``` <br>
 
-22. Add ```@Mock private StudentRepository studentRepository;```
+22. We need a repository to test our service class. Since we already tested our repository and we know it works, instead of auto wiring a repository using an in memory database, we want to use a mock repository. Add ```@Mock private StudentRepository studentRepository;```
 
      
-24. Add a *setUp* method in the beggining of the class that gives us a fresh instance of a StudentService object for each test.
+24. Add a *setUp* method in the beginning of the class that gives us a fresh instance of a StudentService object for each test.
 
     ```
     @Test
@@ -124,9 +124,9 @@ spring.jpa.properties.hibernate.format_sql=true
     }
     ```
 
-25. Add ExtendWith(MockitoExtension.class)
+25. Add @ExtendWith(MockitoExtension.class) annotation to the StudentServiceTest. This annotation basically opens up our mock repository before each test and closes it after each test.
     ```
-    ExtendWith(MockitoExtension.class)
+    @ExtendWith(MockitoExtension.class)
     class(StudentServiceTest) {
     ```
 
