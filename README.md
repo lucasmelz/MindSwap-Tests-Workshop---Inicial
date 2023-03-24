@@ -108,20 +108,19 @@ spring.jpa.properties.hibernate.format_sql=true
 
 19. First test Service the wrong way. Create test "StudentServiceTest" for Student Service
 
-20. Generate relevant testing methods. You can do this automatically by going to IntelliJ, right click anywhere on StudentService and clicking Generate tests.
-
+20. Generate relevant testing methods. You can do this automatically by going to IntelliJ, right click anywhere on StudentService and clicking Generate tests (or using SHIFT + COMMAND + T).
 
 21. Add ```private StudentService undertest;```
 
 22. Add ```@Mock private StudentRepository studentRepository;```
 
      
-24. Add BeforeEach in the beggining of the class
+24. Add a *setUp* method in the beggining of the class that gives us a fresh instance of a StudentService object for each test.
 
     ```
     @Test
     void setUp() {
-        underTest = new StudentService()
+        underTest = new StudentService(studentRepository)
     }
     ```
 
