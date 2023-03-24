@@ -222,3 +222,20 @@ spring.jpa.properties.hibernate.format_sql=true
         verify(studentRepository, never()).save(any());
         
     }
+```
+
+## Exercises 
+
+1. We already tested if our application is capable to reject the registration of a student if it has the same email as another already registered. Now we want to make sure that it only registers students with a valid email. This exercise consists in modifying the method *addStudent* of the StudentService class, by making it to throw an exception if a student tries to register with an invalid email. Then we want to create the corresponding test to cover this requirement. We are going to use the Apache Commons Validator package to validate emails. So the first step is to add this dependency to our pom.xml file:
+```
+		<dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+			<version>1.6</version>
+		</dependency>
+```
+Then reload the project with Maven for it to recognize Apache Commons Validator. Let's modify the method addStudent of the StudentService class now. First we need an object of the type EmailValidator. You can initialize it inside the method like this:<br>
+`EmailValidator emailValidator = EmailValidator.getInstance();`<br>
+Now you can use the method *isValid(String email)* provided by this object to validate emails. Make sure you throw a *BadRequestException* if the email is not valid, just like it does when the email already is taken. After you do that, you can use Intellij Idea test coverage tool to note that this code we just wrote is not being covered by our tests. So let's fix that.
+
+Let's create the corresponding test. Go to the class and create a method *willThrowWhenEmailIsInvalid()* and implement the test in a similar fashion as the method *willThrowWhenEmailIsTaken*.
