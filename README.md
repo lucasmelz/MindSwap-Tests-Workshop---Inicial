@@ -198,6 +198,91 @@ spring.jpa.properties.hibernate.format_sql=true
     }
 ```
 
+30. Let's now write our first integration tests. An integration test is made to test how different the different components of the system interact with each other. Let's first create a package called *integration* inside *test.java.com.example.demo*.
+
+31. Copy the *application.properties* from the main.java.* directory and paste it inside the *resources* folder inside the test folder. Rename it as *application-it.properties*.
+
+32. Create a class inside the integration package we created at step 30. Call it *StudentIt*. This class should have the following annotations and instance variables:
+``` 
+    @SpringBootTest
+    @TestPropertySource(
+        locations = "classpath:application-it.properties"
+    )
+    @AutoConfigureMockMvc
+    public class StudentIT {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private StudentRepository studentRepository;
+
+    private final Faker faker = new Faker();
+    ...
+```
+
+33. Let's test if our application is able to delete students. Write the following test:
+```
+    @Test
+    void canDeleteStudent() throws Exception {
+    // given
+    String name = String.format(
+    "%s %s",
+    faker.name().firstName(),
+    faker.name().lastName()
+    );
+
+    String email = String.format("%s@amigoscode.edu",
+                StringUtils.trimAllWhitespace(name.trim().toLowerCase()));
+
+    Student student = new Student(
+                name,
+                email,
+                Gender.FEMALE
+    );
+
+    mockMvc.perform(post("/api/v1/students")
+           .contentType(MediaType.APPLICATION_JSON)
+           .content(objectMapper.writeValueAsString(student)))
+           .andExpect(status().isOk());
+
+
+    MvcResult getStudentResult = mockMvc.perform(get("/api/v1/students/getByEmail?email=" + email)
+              .contentType(MediaType.APPLICATION_JSON))
+              .andExpect(status().isOk())
+              .andReturn();
+
+    String contentAsString = getStudentResult
+                .getResponse()
+                .getContentAsString();
+
+    Student studentReceived = objectMapper.readValue(
+                contentAsString,
+                new TypeReference<>() {
+                }
+    );
+
+    if (studentReceived==null){
+        throw new IllegalStateException("student with email: " + email + " not found");
+    }
+    long id = studentReceived.getId();
+
+    // when
+    ResultActions resultActions = mockMvc
+                .perform(delete("/api/v1/students/" + id));
+
+    // then
+    resultActions.andExpect(status().isOk());
+    boolean exists = studentRepository.existsById(id);
+    assertThat(exists).isFalse();
+    }
+  }
+```
+    
+
 ## Exercises 
 
 1. We already tested if our application is capable to reject the registration of a student if it has the same email as another already registered. Now we want to make sure that it only registers students with a valid email. This exercise consists in modifying the method *addStudent* of the StudentService class, by making it to throw an exception if a student tries to register with an invalid email. Then we want to create the corresponding test to cover this requirement. We are going to use the Apache Commons Validator package to validate emails. So the first step is to add this dependency to our pom.xml file:
@@ -213,3 +298,5 @@ Then reload the project with Maven for it to recognize Apache Commons Validator.
 Now you can use the method *isValid(String email)* provided by this object to validate emails. Make sure you throw a *BadRequestException* if the email is not valid, just like it does when the email already is taken. After you do that, you can use Intellij Idea test coverage tool to note that this code we just wrote is not being covered by our tests. So let's fix that.
 
 Let's create the corresponding test. Go to the StudentServiceTest class and create a method *willThrowWhenEmailIsInvalid()* and implement the test in a similar fashion as the method *willThrowWhenEmailIsTaken()*.
+
+2. Similarly to the integration test *canDeleteStudent* created at the step 33 of the tutorial, create an integration test called *canRegisterNewStudent*, whose name is self-explanatory...
