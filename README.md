@@ -147,15 +147,6 @@ spring.jpa.properties.hibernate.format_sql=true
     ```
     @Test
     void canAddStudent() {
-
-    }
-    ```
-
-27. Add method canAddStudent
-
-    ```
-    @Test
-    void canAddStudent() {
         //given
         Student student = new Student(
             "Jamila",
@@ -164,43 +155,24 @@ spring.jpa.properties.hibernate.format_sql=true
         );
         //when
         undertest.addStudent(student)
-        //then
+        // then
         ArgumentCaptor<Student> studentArgumentCaptor =
-         ArgumentCaptor.forClass(Student.class);
-        
-        verify(studentRepository).save(studentArgumentCaptor.capture());
-    }
-    ```
+                ArgumentCaptor.forClass(Student.class);
 
-28. Add method canAddStudent
+        verify(studentRepository)
+                .save(studentArgumentCaptor.capture());
 
-    ```
-    @Test
-    void canAddStudent() {
-        //given
-        Student student = new Student(
-            "Jamila",
-            "jamila@gmail.com",
-            Gender.FEMALE
-        );
-        //when
-        undertest.addStudent(student)
-        //then
-        ArgumentCaptor<Student> studentArgumentCaptor =
-         ArgumentCaptor.forClass(Student.class);
-        
-        verify(studentRepository).save(studentArgumentCaptor.capture());
         Student capturedStudent = studentArgumentCaptor.getValue();
 
         assertThat(capturedStudent).isEqualTo(student);
     }
     ```
 
-29. Show code coverage. Go to run and select "Generate Test Coverage". Go to StudentService and check the left side for green and red blocks.
+
+28. Show code coverage. Go to run and select "Generate Test Coverage". Go to StudentService and check the left side for green and red blocks.
 
 
-
-30. Go fix that Red block of coverage by testing it.
+29. Go fix that Red block of coverage by testing it.
 
 ```
     @Test
