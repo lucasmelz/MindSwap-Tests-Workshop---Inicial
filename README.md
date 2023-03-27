@@ -39,7 +39,8 @@ spring.datasource.password=password
         
     }
 8. Add StudentRepository undertest to the beggining of the test class
-   ```@Autowired
+   ```
+    @Autowired
     private StudentRepository underTest
 9. Add 
     ```
